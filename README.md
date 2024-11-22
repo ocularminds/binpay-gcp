@@ -19,8 +19,8 @@ This project is a microservices-based payment solution implemented using Python,
 
 ## **Architecture**
 - **Services**:
-  - **Django**: Handles user management and payment initiation.
-  - **Flask**: Processes payments, logs distributed transactions, and handles rollbacks.
+  - **Initiator**: Handles user management and payment initiation.
+  - **Processor**: Processes payments, logs distributed transactions, and handles rollbacks.
 - **GCP Components**:
   - **Pub/Sub**: Event-driven communication between microservices.
   - **Firestore**: Central transaction logging.
@@ -108,13 +108,12 @@ docker push gcr.io/your-gcp-project-id/processor
 ### Unit Testing
 Run tests for each service:
 
-Django:
+Payment Initiator Service:
 ```bash
 python manage.py test
 ```
 
-Flask:
-
+Payment Processor Service:
 ```bash
 pytest
 ```
@@ -122,9 +121,9 @@ pytest
 ### Integration Testing
 Simulate end-to-end transaction scenarios:
 
-Initiate a payment request from the Django service.
-Verify the Flask service processes the payment and logs transactions in Firestore.
-Simulate a failure in the Flask service and validate rollback behavior.
+Initiate a payment request from the Initiator service.
+Verify the Processor service processes the payment and logs transactions in Firestore.
+Simulate a failure in the Processor service and validate rollback behavior.
 
 CI/CD
 1. Set Up CI/CD Pipeline
@@ -188,7 +187,7 @@ Use GCP Cloud Monitoring and Logging for real-time performance tracking.
 
 ## Usage
 Initiate Payment
-Send a POST request to the Django service:
+Send a POST request to the Initiator service:
 
 ```bash
 curl -X POST -d "user_id=1&amount=100.00" http://<initiator-url>/initiate-payment
@@ -210,7 +209,7 @@ For initiator:
 Use ```python manage.py runserver``` for local development.
 
 For processor:
-Use python app.py for local development, or deploy using Gunicorn for production:
+Use ```python app.py``` for local development, or deploy using Gunicorn for production:
 ```bash
 gunicorn -w 4 -b 0.0.0.0:5000 app:app
 ```
