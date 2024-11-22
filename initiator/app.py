@@ -19,7 +19,7 @@ def initiate_payment(request):
     transaction_id = f"txn-{uuid.uuid4()}"
     db.collection('transactions').document(transaction_id).set({
         'status': 'Initiated',
-        'service': 'Django',
+        'service': 'Initiator',
         'amount': amount,
     })
     

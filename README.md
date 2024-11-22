@@ -194,7 +194,7 @@ curl -X POST -d "user_id=1&amount=100.00" http://<initiator-url>/initiate-paymen
 ```
 
 Simulate Rollback
-Trigger a failure in the Flask service and observe rollback actions logged in Firestore.
+Trigger a failure in the Processor service and observe rollback actions logged in Firestore.
 
 ## Contributing
 Fork the repository.

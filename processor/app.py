@@ -8,7 +8,7 @@ db = firestore.Client()
 
 @app.route('/')
 def index():
-    return jsonify({'message': 'Welcome to the Flask Payment Service'}), 200
+    return jsonify({'message': 'Payment Processor', 'status':'Healthy. Running.'}), 200
 
 # Subscribe to Pub/Sub
 @app.route('/process-payment', methods=['POST'])
@@ -25,7 +25,7 @@ def process_payment():
             # Log success
             db.collection('transactions').document(transaction_id).update({
                 'status': 'Completed',
-                'service': 'Flask',
+                'service': 'Processor',
             })
         else:
             raise Exception("Payment failed")

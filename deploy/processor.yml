@@ -15,7 +15,7 @@ spec:
         app: processor
     spec:
       containers:
-      - name: flask-container
+      - name: processor-container
         image: gcr.io/your-gcp-project-id/processor:latest
         ports:
         - containerPort: 5000
