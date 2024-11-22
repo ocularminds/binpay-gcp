@@ -1,0 +1,7 @@
+Django==4.2
+djangorestframework==3.14.0
+google-cloud-pubsub==2.14.1
+google-cloud-firestore==2.11.0
+python-dotenv==1.0.0
+psycopg2-binary==2.9.6
+gunicorn==21.0.0

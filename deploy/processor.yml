@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: processor
+  labels:
+    app: processor
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: processor
+  template:
+    metadata:
+      labels:
+        app: processor
+    spec:
+      containers:
+      - name: flask-container
+        image: gcr.io/your-gcp-project-id/processor:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: GOOGLE_CLOUD_PROJECT
+          value: "your-gcp-project-id"
+        - name: PUBSUB_TOPIC
+          value: "payment-initiation"
+        - name: PUBSUB_ROLLBACK_TOPIC
+          value: "rollback"
+        - name: PAYMENT_GATEWAY_URL
+          value: "https://your-payment-gateway.com"
+      restartPolicy: Always
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: processor
+  labels:
+    app: processor
+spec:
+  type: ClusterIP
+  selector:
+    app: processor
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000

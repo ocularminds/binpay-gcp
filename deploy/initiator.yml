@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: initiator
+  labels:
+    app: initiator
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: initiator
+  template:
+    metadata:
+      labels:
+        app: initiator
+    spec:
+      containers:
+      - name: django-container
+        image: gcr.io/your-gcp-project-id/initiator:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DJANGO_SETTINGS_MODULE
+          value: "django_service.settings"
+        - name: GOOGLE_CLOUD_PROJECT
+          value: "your-gcp-project-id"
+        - name: PUBSUB_TOPIC
+          value: "payment-initiation"
+        - name: PUBSUB_ROLLBACK_TOPIC
+          value: "rollback"
+        - name: DATABASE_URL
+          value: "your-database-url"
+      restartPolicy: Always
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: initiator
+  labels:
+    app: initiator
+spec:
+  type: ClusterIP
+  selector:
+    app: initiator
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000

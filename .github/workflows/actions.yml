@@ -1,0 +1,42 @@
+name: BinPay Pipeline
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+
+      - name: Install Dependencies
+        run: |
+          pip install -r initiator/requirements.txt
+          pip install -r processor/requirements.txt
+
+      - name: Run Tests
+        run: |
+          python initiator/manage.py test
+          pytest processor
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Authenticate with GCP
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy initiator --image gcr.io/your-gcp-project-id/initiator --region=us-central1 --allow-unauthenticated
+          gcloud run deploy processor --image gcr.io/your-gcp-project-id/processor --region=us-central1 --allow-unauthenticated
